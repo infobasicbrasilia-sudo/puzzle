@@ -1,89 +1,462 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🧩 Gênios da Tecnologia</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,600;14..32,800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>🧩 Gênios da Tecnologia + Monster</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,600;14..32,800&display=swap" rel="stylesheet" />
     <style>
-        /* CSS igual ao anterior – mantive igual para não alongar */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 20% 20%,#1e1e2f,#0b0b12); padding:16px; }
-        .container { background:rgba(255,255,255,0.04); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:48px; padding:32px; max-width:640px; width:100%; box-shadow:0 30px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.03); transition:all .3s ease; }
-        #menu-screen { display:block; }
-        .menu-title { text-align:center; font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,#f0e9ff,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-.5px; margin-bottom:8px; }
-        .menu-sub { text-align:center; color:rgba(255,255,255,0.4); font-weight:300; font-size:.95rem; margin-bottom:32px; letter-spacing:1px; }
-        .grid-choices { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-        .card-genius { background:rgba(255,255,255,0.03); border-radius:24px; padding:20px 12px 16px; text-align:center; cursor:pointer; border:1px solid rgba(255,255,255,0.04); transition:all .25s cubic-bezier(.2,.9,.4,1); box-shadow:0 4px 12px rgba(0,0,0,0.2); backdrop-filter:blur(4px); display:flex; flex-direction:column; align-items:center; gap:10px; }
-        .card-genius:hover { transform:translateY(-6px) scale(1.02); border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.07); box-shadow:0 16px 40px rgba(0,0,0,0.5); }
-        .card-genius:active { transform:scale(.96); }
-        .avatar-placeholder { width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,0.4); box-shadow:0 8px 24px rgba(0,0,0,0.3); transition:transform .3s; letter-spacing:1px; }
-        .card-genius:hover .avatar-placeholder { transform:scale(1.05) rotate(-2deg); }
-        .card-genius .name { font-weight:600; color:#fff; font-size:.9rem; opacity:.9; }
-        .card-genius .subname { font-weight:300; font-size:.65rem; color:rgba(255,255,255,0.3); letter-spacing:.5px; text-transform:uppercase; }
-        .avatar-steve { background:radial-gradient(circle at 30% 30%,#6e6e6e,#1a1a1a); }
-        .avatar-bill { background:radial-gradient(circle at 30% 30%,#4da6ff,#003c8f); }
-        .avatar-mark { background:radial-gradient(circle at 30% 30%,#5b9eff,#0a2b5e); }
-        .avatar-sam { background:radial-gradient(circle at 30% 30%,#4ade80,#0b5e2e); }
-        #game-screen { display:none; }
-        .game-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:8px; }
-        .btn-back { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.06); color:rgba(255,255,255,0.6); padding:8px 18px; border-radius:40px; font-size:.8rem; font-weight:600; cursor:pointer; transition:.2s; font-family:'Inter',sans-serif; letter-spacing:.3px; backdrop-filter:blur(4px); }
-        .btn-back:hover { background:rgba(255,255,255,0.12); color:#fff; }
-        .game-stats { display:flex; gap:18px; color:rgba(255,255,255,0.5); font-weight:300; font-size:.85rem; }
-        .game-stats span { background:rgba(255,255,255,0.04); padding:4px 14px; border-radius:40px; border:1px solid rgba(255,255,255,0.04); }
-        .game-stats strong { color:#fff; font-weight:600; }
-        .puzzle-wrapper { position:relative; aspect-ratio:1/1; width:100%; margin:0 auto; background:rgba(0,0,0,0.3); border-radius:28px; padding:10px; box-shadow:inset 0 4px 20px rgba(0,0,0,0.6); }
-        .puzzle-grid { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:8px; width:100%; height:100%; }
-        .tile { border-radius:16px; background-color:#2a2a3a; cursor:pointer; transition:all .18s cubic-bezier(.2,.9,.4,1); box-shadow:0 4px 12px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.4rem; color:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.04); position:relative; overflow:hidden; }
-        .tile canvas { display:block; width:100%; height:100%; object-fit:cover; pointer-events:none; }
-        .tile:hover:not(.empty) { transform:scale(1.03); border-color:rgba(255,255,255,0.15); box-shadow:0 8px 24px rgba(0,0,0,0.5); }
-        .tile:active:not(.empty) { transform:scale(.94); }
-        .tile.empty { background:rgba(255,255,255,0.02)!important; box-shadow:none!important; border:1px dashed rgba(255,255,255,0.05); cursor:default; backdrop-filter:blur(2px); }
-        .tile.empty canvas { display:none; }
-        .win-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); border-radius:28px; display:none; flex-direction:column; align-items:center; justify-content:center; z-index:10; padding:20px; animation:fadeIn .6s ease; }
-        .win-overlay.show { display:flex; }
-        .win-overlay h2 { font-size:2.5rem; font-weight:800; color:#fff; margin-bottom:4px; }
-        .win-overlay p { color:rgba(255,255,255,0.6); font-weight:300; margin-bottom:20px; font-size:1rem; }
-        .win-overlay .btn-shuffle { background:linear-gradient(135deg,#a78bfa,#7c3aed); border:none; color:#fff; padding:14px 40px; border-radius:60px; font-weight:700; font-size:1rem; cursor:pointer; transition:.25s; box-shadow:0 8px 30px rgba(124,58,237,0.3); font-family:'Inter',sans-serif; }
-        .win-overlay .btn-shuffle:hover { transform:scale(1.05); box-shadow:0 12px 40px rgba(124,58,237,0.5); }
-        .confetti-container { position:absolute; inset:0; pointer-events:none; overflow:hidden; border-radius:28px; }
-        .confetti { position:absolute; width:10px; height:10px; background:#fbbf24; opacity:0; animation:confettiFall 2s ease-in forwards infinite; }
-        @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg); opacity:1;} 100%{transform:translateY(400px) rotate(720deg); opacity:0;} }
-        @keyframes fadeIn { 0%{opacity:0; transform:scale(.9);} 100%{opacity:1; transform:scale(1);} }
-        @media (max-width:500px) { .container{padding:16px;border-radius:32px;} .grid-choices{grid-template-columns:1fr 1fr;gap:10px;} .avatar-placeholder{width:60px;height:60px;font-size:1.2rem;} .menu-title{font-size:1.6rem;} .game-stats{font-size:.7rem;gap:8px;} .game-stats span{padding:2px 10px;} .puzzle-grid{gap:5px;} .tile{border-radius:12px;} .win-overlay h2{font-size:1.8rem;} }
-        @media (max-width:400px) { .grid-choices{grid-template-columns:1fr 1fr;gap:6px;} .card-genius{padding:12px 6px;} .avatar-placeholder{width:48px;height:48px;font-size:.9rem;} }
+        /* ===== RESET E BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 20% 20%, #1e1e2f, #0b0b12);
+            padding: 16px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 32px;
+            max-width: 640px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TELA DE MENU ===== */
+        #menu-screen {
+            display: block;
+        }
+
+        .menu-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f0e9ff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .menu-sub {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 300;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
+        }
+
+        .grid-choices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .card-genius {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 20px 12px 16px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-genius:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-genius:active {
+            transform: scale(0.96);
+        }
+
+        .avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .card-genius:hover .avatar-placeholder {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        .card-genius .name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .card-genius .subname {
+            font-weight: 300;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Cores dos placeholders (caso a imagem não carregue) */
+        .avatar-steve {
+            background: radial-gradient(circle at 30% 30%, #6e6e6e, #1a1a1a);
+        }
+        .avatar-bill {
+            background: radial-gradient(circle at 30% 30%, #4da6ff, #003c8f);
+        }
+        .avatar-mark {
+            background: radial-gradient(circle at 30% 30%, #5b9eff, #0a2b5e);
+        }
+        .avatar-sam {
+            background: radial-gradient(circle at 30% 30%, #4ade80, #0b5e2e);
+        }
+        .avatar-monster {
+            background: radial-gradient(circle at 30% 30%, #00ff00, #003300);
+        }
+
+        /* ===== TELA DO JOGO ===== */
+        #game-screen {
+            display: none;
+        }
+
+        .game-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+            font-size: 0.85rem;
+        }
+
+        .game-stats span {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .game-stats strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .puzzle-wrapper {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 28px;
+            padding: 10px;
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tile {
+            border-radius: 16px;
+            background-color: #2a2a3a;
+            cursor: pointer;
+            transition: all 0.18s cubic-bezier(0.2, 0.9, 0.4, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tile canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .tile:hover:not(.empty) {
+            transform: scale(1.03);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .tile:active:not(.empty) {
+            transform: scale(0.94);
+        }
+
+        .tile.empty {
+            background: rgba(255, 255, 255, 0.02) !important;
+            box-shadow: none !important;
+            border: 1px dashed rgba(255, 255, 255, 0.05);
+            cursor: default;
+            backdrop-filter: blur(2px);
+        }
+
+        .tile.empty canvas {
+            display: none;
+        }
+
+        /* Overlay de vitória */
+        .win-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .win-overlay.show {
+            display: flex;
+        }
+
+        .win-overlay h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .win-overlay p {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .win-overlay .btn-shuffle {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            border: none;
+            color: #fff;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .win-overlay .btn-shuffle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
+        }
+
+        .confetti-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 28px;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fbbf24;
+            opacity: 0;
+            animation: confettiFall 2s ease-in forwards infinite;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(400px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 500px) {
+            .container {
+                padding: 16px;
+                border-radius: 32px;
+            }
+            .grid-choices {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .avatar-placeholder {
+                width: 60px;
+                height: 60px;
+                font-size: 1.2rem;
+            }
+            .menu-title {
+                font-size: 1.6rem;
+            }
+            .game-stats {
+                font-size: 0.7rem;
+                gap: 8px;
+            }
+            .game-stats span {
+                padding: 2px 10px;
+            }
+            .puzzle-grid {
+                gap: 5px;
+            }
+            .tile {
+                border-radius: 12px;
+            }
+            .win-overlay h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .grid-choices {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .card-genius {
+                padding: 12px 6px;
+            }
+            .avatar-placeholder {
+                width: 48px;
+                height: 48px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- MENU e JOGO (estrutura idêntica) -->
     <div class="container" id="app">
+        <!-- MENU -->
         <div id="menu-screen">
             <div class="menu-title">🧩 Gênios da Tech</div>
             <div class="menu-sub">ESCOLHA SEU DESAFIO</div>
             <div class="grid-choices">
+                <!-- Steve Jobs -->
                 <div class="card-genius" data-person="steve">
                     <div class="avatar-placeholder avatar-steve">SJ</div>
                     <div class="name">Steve Jobs</div>
                     <div class="subname">Apple</div>
                 </div>
+                <!-- Bill Gates -->
                 <div class="card-genius" data-person="bill">
                     <div class="avatar-placeholder avatar-bill">BG</div>
                     <div class="name">Bill Gates</div>
                     <div class="subname">Microsoft</div>
                 </div>
+                <!-- Mark Zuckerberg -->
                 <div class="card-genius" data-person="mark">
                     <div class="avatar-placeholder avatar-mark">MZ</div>
                     <div class="name">Mark Zuckerberg</div>
                     <div class="subname">Meta</div>
                 </div>
+                <!-- Sam Altman -->
                 <div class="card-genius" data-person="sam">
                     <div class="avatar-placeholder avatar-sam">SA</div>
                     <div class="name">Sam Altman</div>
                     <div class="subname">OpenAI</div>
                 </div>
+                <!-- Monster Energy -->
+                <div class="card-genius" data-person="monster">
+                    <div class="avatar-placeholder avatar-monster">M</div>
+                    <div class="name">Monster Energy</div>
+                    <div class="subname">Bebida Energética</div>
+                </div>
             </div>
-            <p style="text-align:center; margin-top:20px; color:rgba(255,255,255,0.15); font-size:.7rem; letter-spacing:1px;">Clique em um card para começar</p>
+            <p style="text-align:center; margin-top:20px; color:rgba(255,255,255,0.15); font-size:0.7rem; letter-spacing:1px;">
+                Clique em um card para começar
+            </p>
         </div>
+
+        <!-- JOGO -->
         <div id="game-screen">
             <div class="game-header">
                 <button class="btn-back" id="btnBack">← Voltar</button>
@@ -111,26 +484,30 @@
         const GRID_SIZE = 3;
         const TOTAL_TILES = GRID_SIZE * GRID_SIZE;
 
-        // Definição dos personagens – agora com imagens (URLs)
+        // Definição dos personagens – agora com 5 opções
         const GENIUS_DATA = {
             steve: {
                 name: 'Steve Jobs',
-                img: 'steve_jobs.png'   // caminho da imagem
+                img: 'steve_jobs.png'
             },
             bill: {
                 name: 'Bill Gates',
-                img: 'bilGates.png'             // null = usa placeholder
-               
+                img: 'bilGates.png' // ou .jpg, ajuste conforme seu arquivo
             },
             mark: {
                 name: 'Mark Zuckerberg',
                 img: 'zuckerberg.png'
-               
             },
             sam: {
                 name: 'Sam Altman',
                 img: 'Sam_Altman.jpg'
-               
+            },
+            monster: {
+    name: 'Monster Energy',
+    img: 'monster.png',
+    bg: 'linear-gradient(135deg, #00ff00, #003300)',
+    letter: 'M'
+
             }
         };
 
@@ -146,7 +523,7 @@
         let isGameOver = false;
         let isShuffling = false;
         let hasShuffled = false;
-        let loadedImage = null; // armazena a imagem carregada para recorte
+        let loadedImage = null;
 
         // ============================================================
         //  DOM REFS
@@ -200,13 +577,11 @@
                     tile.classList.add('empty');
                 } else {
                     if (useImage) {
-                        // Cria um canvas para cada peça
                         const canvas = document.createElement('canvas');
-                        canvas.width = 200; // tamanho fixo para recorte (depois o CSS redimensiona)
+                        canvas.width = 200;
                         canvas.height = 200;
                         const ctx = canvas.getContext('2d');
 
-                        // Calcula a posição da peça na imagem original
                         const originalRow = Math.floor(value / GRID_SIZE);
                         const originalCol = value % GRID_SIZE;
                         const imgWidth = loadedImage.width;
@@ -214,7 +589,6 @@
                         const pieceWidth = imgWidth / GRID_SIZE;
                         const pieceHeight = imgHeight / GRID_SIZE;
 
-                        // Recorta exatamente a parte da imagem
                         ctx.drawImage(
                             loadedImage,
                             originalCol * pieceWidth,
@@ -226,9 +600,9 @@
 
                         tile.appendChild(canvas);
                     } else {
-                        // Placeholder com gradiente
-                        tile.style.background = personData.bg;
-                        tile.textContent = personData.letter || '';
+                        // Fallback para gradiente (caso não tenha imagem)
+                        tile.style.background = personData.bg || 'linear-gradient(135deg, #444, #111)';
+                        tile.textContent = personData.letter || '?';
                         tile.style.color = 'rgba(255,255,255,0.3)';
                         tile.style.fontSize = '1.6rem';
                         tile.style.fontWeight = '800';
@@ -322,7 +696,7 @@
 
         function spawnConfetti() {
             confettiContainer.innerHTML = '';
-            const colors = ['#fbbf24','#f472b6','#34d399','#60a5fa','#a78bfa','#fb923c'];
+            const colors = ['#fbbf24', '#f472b6', '#34d399', '#60a5fa', '#a78bfa', '#fb923c'];
             for (let i = 0; i < 60; i++) {
                 const el = document.createElement('div');
                 el.className = 'confetti';
@@ -351,18 +725,16 @@
             const person = GENIUS_DATA[currentPerson];
 
             if (person.img) {
-                // Carrega a imagem antes de começar
                 const img = new Image();
                 img.crossOrigin = 'Anonymous';
                 img.onload = function() {
                     loadedImage = img;
-                    // Inicia o jogo com a imagem carregada
                     initGame();
                 };
                 img.onerror = function() {
-                    alert('Erro ao carregar a imagem. Verifique o caminho.');
+                    alert('⚠️ Não foi possível carregar a imagem. Usando placeholder.');
                     loadedImage = null;
-                    initGame(); // continua sem imagem (placeholder)
+                    initGame();
                 };
                 img.src = person.img;
             } else {
@@ -383,7 +755,7 @@
             confettiContainer.innerHTML = '';
             if (timerInterval) clearInterval(timerInterval);
 
-            renderGrid(); // mostra a imagem montada
+            renderGrid();
 
             setTimeout(() => {
                 if (!hasShuffled) {
@@ -414,7 +786,7 @@
 
         btnShuffle.addEventListener('click', shufflePuzzle);
 
-        console.log('🧩 Quebra-cabeça com recorte via Canvas carregado!');
+        console.log('🧩 Quebra-cabeça com Monster Energy carregado!');
     </script>
 </body>
 </html>
